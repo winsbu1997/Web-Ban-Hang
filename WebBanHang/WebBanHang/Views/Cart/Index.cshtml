@@ -1,0 +1,201 @@
+﻿@model List<WebBanHang.Models.CartItem>
+@using System.Configuration
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/assets/css/TinhChinh.css">
+@section Script1{
+    <script src="~/assets/js/test/CartController.js"></script>
+}
+<section id ="cart-page">
+    <div class="body-content outer-top-xs">
+        <div class="container">
+            <div class="row ">
+                <form action="@ConfigurationManager.AppSettings["posturl"]" method="POST">
+                    <div class="shopping-cart">
+                        <div class="shopping-cart-table ">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="cart-description item">Hình Ảnh</th>
+                                            <th class="cart-product-name item">Tên Sản Phẩm</th>
+                                            <th class="cart-qty item">Số Lượng</th>
+                                            <th class="cart-sub-total item">Đơn Giá</th>
+                                            <th class="cart-total last-item">Thành Tiền</th>
+                                            <th class="cart-romove item">Xóa</th>
+                                        </tr>
+                                    </thead><!-- /thead -->
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="7">
+                                                <div class="shopping-cart-btn">
+                                                    <span class="">
+                                                        <a href="/Home" class="btn btn-upper btn-primary outer-left-xs">Tiếp Tục Mua Sắm</a>
+                                                        <a href="/Cart" class="btn btn-upper btn-primary pull-right outer-right-xs">Cập Nhập Giỏ Hàng</a>
+                                                    </span>
+                                                </div><!-- /.shopping-cart-btn -->
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @{
+                                            var i = 0;
+                                            var total = 0;
+                                        }
+                                        @foreach (var item in Model)
+                                        {
+                                            var price = item.ProductModel.Price;
+                                            if (item.ProductModel.Sale.HasValue)
+                                            {
+                                                price = price - (item.ProductModel.Sale * price) / 100;
+                                            }
+                                            total += Convert.ToInt32(price * item.Quantity);
+                                            i += 1;
+                                            var url = "/chi-tiet/" + @item.ProductModel.MetaTitle + "-" + @item.ProductModel.ID;
+                                            <tr style="border-bottom: solid 1px #e5e5e5">
+                                                <td class="cart-image" style="border-left: solid 1px #e5e5e5">
+                                                    <a class="entry-thumbnail" href="#">
+                                                        <img src="@item.ProductModel.Image" alt="">
+                                                    </a>
+                                                </td>
+                                                <td class="cart-product-name-info">
+                                                    <h4 class='cart-product-description'><a href="#">@item.ProductModel.Name</a></h4>
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <div class="rating rateit-small"></div>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <div class="reviews">
+                                                                (06 Reviews)
+                                                            </div>
+                                                        </div>
+                                                    </div><!-- /.row -->
+                                                    <div class="cart-product-info">
+                                                        <span class="product-color">COLOR:<span>Blue</span></span>
+                                                    </div>
+                                                </td>
+                                                <td class="cart-product-quantity">
+                                                    @*<input type="number" name="textfield" id="textfield" data-id="@item.ProductModel.ID" value="@item.Quantity" min="1" max="5" class="quantity">*@
+                                                    <div class="quantity">
+                                                        <div class="le-quantity">
+                                                            <a class="minus" href="#" onclick="changequality(@i,'down',@item.ProductModel.ID)" ></a>
+                                                            <input name="textfield" class="quantity1" id="quantity+@i" data-id="@item.ProductModel.ID" type="text" value="@item.Quantity" />
+                                                            <a class="plus" href="#" onclick="changequality(@i,'up',@item.ProductModel.ID)"></a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="cart-product-sub-total"><span class="cart-sub-total-price">@price.Value.ToString("N0"))</span></td>
+                                                <td class="cart-product-grand-total"><span class="cart-grand-total-price">@((item.Quantity * price).Value.ToString("N0"))</span></td>
+                                                <td class="romove-item"><a title="cancel" class="icon btnDelete" href ="#" data-id="@item.ProductModel.ID"><i class="fa fa-trash-o"></i></a></td>
+                                            </tr>
+                                        }
+
+                                    </tbody><!-- /tbody -->
+                                </table><!-- /table -->
+                            </div>
+                        </div><!-- /.shopping-cart-table -->
+                        <div class="col-md-4 col-sm-12 estimate-ship-tax">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span class="estimate-title">Estimate shipping and tax</span>
+                                            <p>Enter your destination to get shipping and tax.</p>
+                                        </th>
+                                    </tr>
+                                </thead><!-- /thead -->
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="info-title control-label">Country <span>*</span></label>
+                                                <select class="form-control unicase-form-control selectpicker">
+                                                    <option>--Select options--</option>
+                                                    <option>India</option>
+                                                    <option>SriLanka</option>
+                                                    <option>united kingdom</option>
+                                                    <option>saudi arabia</option>
+                                                    <option>united arab emirates</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="info-title control-label">State/Province <span>*</span></label>
+                                                <select class="form-control unicase-form-control selectpicker">
+                                                    <option>--Select options--</option>
+                                                    <option>TamilNadu</option>
+                                                    <option>Kerala</option>
+                                                    <option>Andhra Pradesh</option>
+                                                    <option>Karnataka</option>
+                                                    <option>Madhya Pradesh</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="info-title control-label">Zip/Postal Code</label>
+                                                <input type="text" class="form-control unicase-form-control text-input" placeholder="">
+                                            </div>
+                                            <div class="pull-right">
+                                                <button type="submit" class="btn-upper btn btn-primary">GET A QOUTE</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><!-- /.estimate-ship-tax -->
+
+                        <div class="col-md-4 col-sm-12 estimate-ship-tax">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span class="estimate-title">Discount Code</span>
+                                            <p>Enter your coupon code if you have one..</p>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control unicase-form-control text-input" placeholder="You Coupon..">
+                                            </div>
+                                            <div class="clearfix pull-right">
+                                                <button type="submit" class="btn-upper btn btn-primary">APPLY COUPON</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody><!-- /tbody -->
+                            </table><!-- /table -->
+                        </div><!-- /.estimate-ship-tax -->
+
+                        <div class="col-md-4 col-sm-12 cart-shopping-total">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="cart-sub-total">
+                                                Giảm giá<span class="inner-left-md">0</span>
+                                            </div>
+                                            <div class="cart-grand-total">
+                                                Tổng Tiền: <span class="inner-left-md">@total</span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead><!-- /thead -->
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="cart-checkout-btn pull-right">
+                                                <a class="btn btn-primary checkout-btn" href="/Cart/Payment">Mua Ngay</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody><!-- /tbody -->
+                            </table><!-- /table -->
+                        </div><!-- /.cart-shopping-total -->
+                    </div><!-- /.shopping-cart -->
+                </form>
+            </div> <!-- /.row -->
+        </div><!-- /.container -->
+    </div><!-- /.body-content -->
+</section>

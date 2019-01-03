@@ -1,0 +1,68 @@
+﻿@using WebBanHang.Models.EF;
+<script>
+    function summitfilter() {
+        var form = document.getElementById("advancedProduct");
+        form.submit();
+    }
+</script>
+<style>
+    .price-range-holder .min-max {
+        float: left;
+        margin: 14px 0 0 0;
+        font-size: 13px;
+    }
+</style>
+<!-- ============================================== SIDEBAR CATEGORY ============================================== -->
+<form id="advancedProduct" action="@Url.Action("AdvancedSearchView", "Search")" autocomplete="off">
+    <div class="sidebar-widget wow fadeInUp">
+        <h2 style="color:deepskyblue">Loại</h2>
+        <hr>
+        <h5 style="font-weight: 800">Loại sản phẩm</h5>
+        <ul>
+            @{
+                ShopMVC5DbContext db = new ShopMVC5DbContext();
+                ProductCategory cat = new ProductCategory();
+                IQueryable<ProductCategory> catlist = db.ProductCategories;
+                foreach (var item in catlist)
+                {
+                    <li><input name="loai" class="le-checkbox" type="radio" value="@item.Name" /> <label style="font-weight: 500">@item.Name</label></li>
+                }
+            }
+        </ul>
+        <h5 style="font-weight: 800">Hãng sản xuất</h5>
+        <ul>
+            @{
+                Producer hang = new Producer();
+                IQueryable<Producer> hanglist = db.Producers;
+                foreach (var item in hanglist)
+                {
+                    <li><input name="hangsx" class="le-checkbox" type="radio" value="@item.Name" /> <label style="font-weight: 500">@item.Name</label></li>
+                }
+            }
+        </ul>
+    </div><!-- /.category-filter -->
+    <!-- /.sidebar-widget -->
+    <!-- ============================================== SIDEBAR CATEGORY : END ============================================== -->
+    <!-- ============================================== PRICE SILDER============================================== -->
+    <div class="sidebar-widget wow fadeInUp">
+        <h2 style="color:deepskyblue">Giá</h2>
+        <hr>
+        <div class="sidebar-widget-body m-t-10">
+            <div class="price-range-holder">
+                <h5>Từ</h5>
+                <input class="le-input" type="number" name="minprice" step="500000" min="0" max="30000000" style="width:auto" value="@ViewBag.minprice">
+                <h5>Đến</h5>
+                <input class="le-input" type="number" name="maxprice" step="500000" min="0" max="30000000" style="width:auto" value="@ViewBag.maxprice">
+                <span class="min-max">
+                    Giá: 0 - 30,000,000 VNĐ
+                </span>
+            </div>
+            <!-- /.price-range-holder -->
+            <hr>
+            <a href='javascript:summitfilter()' class="lnk btn btn-primary" style="margin-left : 40px">Tìm kiếm</a>
+        </div>
+    </div>
+</form>
+<!-- /.sidebar-widget -->
+<!-- ============================================== PRICE SILDER : END ============================================== -->
+

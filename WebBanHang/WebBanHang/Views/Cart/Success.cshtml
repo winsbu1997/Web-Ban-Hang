@@ -1,0 +1,28 @@
+﻿@model dynamic
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<section id="content">
+    <div class="container">
+        <h4>
+            Chúng tôi đã gửi email đến tài khoản của bạn .Sẽ quay lại trang chủ trong <span id="counter" style="color: red">5</span> (s) nữa
+        </h4>
+
+
+        <script>
+            setInterval(function() {
+                var div = document.querySelector("#counter");
+                var count = div.textContent * 1 - 1;
+                div.textContent = count;
+                if (count <= 0) {
+                    clearInterval();
+                    location.href = "/";
+
+                }
+            }, 1000);
+        </script>
+    </div>
+</section>

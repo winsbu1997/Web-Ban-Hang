@@ -1,0 +1,99 @@
+﻿@model List<WebBanHang.Models.CartItem>
+<style>
+    .le-button.inverse:hover {
+        background-color: #edcb12;
+        color: #3d3d3d;
+    }
+    .le-button:hover {
+    background-color: #60c011;
+    }
+    .le-button.inverse {
+    background-color: #e0e0e0;
+    color: #3d3d3d;
+    font-weight: 100;
+    }
+    .le-button {
+        border-radius: 4px;
+        font-weight: bold;
+        padding: 10px 20px;
+        display: inline-block;
+        line-height: 20px;
+        border: none;
+        font-size: 15px;
+        color: #3d3d3d;
+        text-transform: capitalize;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+        background-color: #e0e0e0;
+    }
+</style>
+<a href="#" class="dropdown-toggle lnk-cart" data-toggle="dropdown">
+    <div class="items-cart-inner">
+        <div class="basket"> <i class="glyphicon glyphicon-shopping-cart"></i> </div>
+        <div class="basket-item-count"><span class="count">@Model.Count</span></div>
+        <div class="total-price-basket"><span class="total-price"><span class="value">@ViewBag.Total.ToString("N0")</span><span class="sign"> VND</span> </span> </div>
+    </div>
+</a>
+<ul class="dropdown-menu">
+    @if (Model.Count > 0)
+    {
+        var i = 0;
+        foreach (var item in Model)
+        {
+            var url = "/chi-tiet/" + @item.ProductModel.MetaTitle + "-" + @item.ProductModel.ID;
+            i++;
+            <li id="sams">
+                <div class="cart-item product-summary">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="image"> <a href="@url"><img src="@item.ProductModel.Image" alt=""></a> </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <h3 class="name"><a href="@url">@item.ProductModel.Name</a></h3>
+                            <div class="price">@ViewBag.Price[i].ToString("N0")</div>
+                        </div>
+                        <div class="col-xs-1 action"> <a href="#" onclick="Delete(@item.ProductModel.ID)"><i class="fa fa-trash"></i></a> </div>
+                    </div>
+                </div>
+                <!-- /.cart-item -->
+                <div class="clearfix"></div>
+                <div class="pull-right"> <span class="text">Số lượng : </span><span class='price'>@item.Quantity</span> </div>
+                <hr>
+                <div class="clearfix cart-total">
+                    <div class="clearfix"></div>
+
+                </div>
+                <!-- /.cart-total-->
+            </li>
+        }
+    }
+    <li class="checkout">
+        <div class="basket-item">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <a href="/Cart/" class="le-button inverse">Xem</a>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <a href="/Cart/Payment" class="le-button">Mua</a>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+<script>
+    function Delete(id) {
+        $.ajax({
+            url: '/Cart/Delete/',
+            dataType: 'json',
+            data: { id: id },
+            type: 'POST',
+            success: function (response) {
+                if (response.status == true) {
+                    $('#nataly').load("/Cart/CartHeader");
+                }
+            }
+        });
+    }
+</script>

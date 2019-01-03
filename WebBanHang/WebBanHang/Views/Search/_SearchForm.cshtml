@@ -1,0 +1,99 @@
+﻿@model IEnumerable<WebBanHang.Models.EF.ProductCategory>
+<script type="text/javascript">
+    $(document).ready(function () {
+        bindEvent();
+    });
+    function bindEvent() {
+        $("#sanpham").bind('keyup', function () { setTimeout(GetAliasDetails, 0) });
+    }
+    function GetAliasDetails(text) {
+        if (text) {
+            $("#divLoader").show();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@Url.Action("SearchByName", "Search")",
+                data: "{term:'" + text + "'}",
+                dataType: "json",
+                success: function (data) {
+                    $(".divAutoComplete").html('');
+                    $("#divLoader").hide();
+                    var html = '';
+                    if (data != null) {
+                        var html = "<div style=\"border:3px solid #c6c6c6;background-color: #fff;\">";
+                        html += "<table>";
+                        $.each(data, function (i, item) {
+                            html += "<tbody class=\"hoversearch\"  onclick=\"chuyentrang(\'" + item.MetaTitle + "\',\'" + item.ID + "\')\"><tr>";
+                            html += "<td style=\"padding:5px\" rowspan=\"2\"><img width=\"50\" height=\"50\" src=\"" + item.Image + "\" /></td>";
+                            html += "<td style=\"padding:5px\"><span class=\"bold\">" + item.Name + "</span></td></tr>";
+                            html += "<tr><td style=\"padding:5px\"><span style=\"color:#2A1051\" class=\"bold\">" + item.Price + " VNĐ</span></td></tr>"
+                            html += "</tbody>"
+                        });
+                        html += "</table></div>";
+                        $(".divAutoComplete").html(html).show();
+                    } else {
+                        var html = "<div style=\"border:3px solid #c6c6c6;background-color: #fff;\">";
+                        html += "<b>Không có sản phẩm nào</b>";
+                        html += "</div>";
+                        $(".divAutoComplete").html(html).show();
+                    }
+                },
+                error: function (result) {
+                    $("#divLoader").hide();
+                }
+            });
+        } else {
+            close();
+        }
+    }
+
+
+    function close() {
+        $(".divAutoComplete").html("");
+        $(".divAutoComplete").slideUp();
+        $("#divLoader").hide();
+    }
+
+    function chuyentrang(title, id) {
+        window.location = '/chi-tiet/' + title + '-' + id;
+    }
+</script>
+
+<script>
+    function submitsearch() {
+        var text = $('#sanpham').val();
+        window.location = '@Url.Action("AdvancedSearchView", "Search")?term=' + text;
+    }
+</script>
+
+<style>
+    .hoversearch {
+        cursor: pointer;
+        border-bottom: 1px dotted #c6c6c6;
+    }
+
+        .hoversearch:hover {
+            background-color: #ffd800;
+        }
+</style>
+<form class="test" action="" autocomplete="off">
+    <div class="control-group">
+        <ul class="categories-filter animate-dropdown">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="category.html">Tất Cả Các Loại<b class="caret"></b></a>
+                <ul class="dropdown-menu" role="menu">
+                    @foreach (var item in Model)
+                    {
+                        var url = Url.Action("AdvancedSearchView", "Search", new { @loai = item.Name });
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="@url">@item.Name</a></li>
+                    }
+                </ul>
+            </li>
+        </ul>
+        <input type="text" id="sanpham" class="search-field" placeholder="Tìm kiếm sản phẩm..." name="term" onkeyup="GetAliasDetails(this.value)">
+        <a class="search-button" href="javascript:submitsearch()"></a>
+    </div>
+</form>
+<div class="divAutoComplete" style="position:absolute; z-index:100; height: auto; padding-top: 10px; display: block;margin-left:120px;"></div>
+
+

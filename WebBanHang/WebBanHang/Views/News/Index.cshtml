@@ -1,0 +1,61 @@
+﻿@model PagedList.IPagedList<WebBanHang.Models.EF.News>
+@using PagedList.Mvc
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="content">
+    <div class="container top">
+        <div class="content_top">
+            <div class="breadcrumbs"><a href="/home">Trang chủ</a> <span>›</span> <a href="/bai-viet/">Bài viết</a> </div>
+        </div>
+        <div class="row">
+            <div class="span9">
+                @foreach (var item in Model)
+                {
+                    <div class="post-preview">
+                        <h3><a href="/bai-viet/@item.MetaTitle-@item.ID">@item.Title</a></h3>
+                        <div class="image"><img src="@item.MetaTitle" style="width:733px; height: 301px;" alt="" class="img-responsive img-rounded"></div>
+                        <div class="post-meta"> <span class="meta-date"><i class="icon-clock-alt"></i>@item.CreateDate.ToString("yyyy-MM-dd")</span></div>
+                        <p>@item.Content </p>
+                        <p><a class="button" href="/bai-viet/@item.MetaTitle-@item.ID">Xem chi tiết</a></p>
+                    </div>
+                    <div class="line"></div>
+                }
+
+
+                <div class="paginator">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+                </div>
+            </div>
+            <div class="span3">
+                <div class="block">
+                    <div class="block-title">Danh mục</div>
+                    <div class="block-content">
+                        @{Html.RenderAction("CategoryContent", "Content");}
+                    </div>
+                </div>
+                <div class="block">
+                    <div class="block-content">
+                        <div class="block-title">Latest Tweets</div>
+                        <div class="twit">
+                            <div class="icon"><i class="icon-twitter-bird"></i></div>
+                            <div class="mess">
+                                Nullam id justo sed diam aliquam tincidunt. Duis sollicitudin, dui ac More info at  labore <a href="#">http://t.co/f9E9cJEg </a>Thanks for the patience :)<br>
+                                3 days ago
+                            </div>
+                        </div>
+                        <div class="twit">
+                            <div class="icon"><i class="icon-twitter-bird"></i></div>
+                            <div class="mess">
+                                Curabitur convallis facilisis lorem. Curabi tur quis tortordi. Maecenas tincidunt adipiscing tellus. Aliquam erat volutpat. Nulla porttitor tortor at nisl. Mauris sem ac risu magna sed <a href="#">http://t.co/VCB4tX7r</a><br>
+                                3 days ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
