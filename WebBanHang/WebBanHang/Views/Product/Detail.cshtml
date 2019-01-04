@@ -1,7 +1,7 @@
 ﻿@model WebBanHang.Models.ProductModel
 @using WebBanHang.Models.EF;
-@{
-
+@using WebBanHang.Models;
+@{ 
     Layout = "~/Views/Shared/_Layout.cshtml";
     ShopMVC5DbContext db = new ShopMVC5DbContext();
 }
@@ -288,36 +288,41 @@
                 <section class="section featured-product wow fadeInUp">
                     <h3 class="section-title">Sản phẩm liên quan</h3>
                     <div class="owl-carousel home-owl-carousel upsell-product custom-carousel owl-theme outer-top-xs">
-                        @{
-                            var list = (
-                                        from p in db.Products.OrderByDescending(x => x.CreateDate)
-                                        select new WebBanHang.Models.ProductModel()
-                                        {
-                                            ID = p.ID,
-                                            Name = p.Name,
-                                            Code = p.Code,
-                                            Image = ((from z in db.Images
-                                                      where z.ProductID == p.ID
-                                                      select new
-                                                      {
-                                                          z.Src
-                                                      }).Take(1).FirstOrDefault().Src),
-                                            MetaTitle = p.MetaTitle,
-                                            Detail = p.Detail,
-                                            Quantity = p.Quantity,
-                                            Price = p.Price,
-                                            CreateDate = p.CreateDate,
-                                            Sale = ((from s in db.Sales
-                                                     where s.ProductID == p.ID && s.EndDate >= DateTime.Now
-                                                     orderby s.ID descending
-                                                     select new
-                                                     {
-                                                         s.Discount
-                                                     }).Take(1).FirstOrDefault().Discount)
-                                        }).ToList();
-                            var model = list.Take(7);
+                        @functions{
+                            public IEnumerable<ProductModel> GetNewProduct(int sl)
+                            {
+                                ShopMVC5DbContext db = new ShopMVC5DbContext();
+                                var list = (
+                                                            from p in db.Products.OrderByDescending(x => x.CreateDate)
+                                                            select new WebBanHang.Models.ProductModel()
+                                                            {
+                                                                ID = p.ID,
+                                                                Name = p.Name,
+                                                                Code = p.Code,
+                                                                Image = ((from z in db.Images
+                                                                          where z.ProductID == p.ID
+                                                                          select new
+                                                                          {
+                                                                              z.Src
+                                                                          }).Take(1).FirstOrDefault().Src),
+                                                                MetaTitle = p.MetaTitle,
+                                                                Detail = p.Detail,
+                                                                Quantity = p.Quantity,
+                                                                Price = p.Price,
+                                                                CreateDate = p.CreateDate,
+                                                                Sale = ((from s in db.Sales
+                                                                         where s.ProductID == p.ID && s.EndDate >= DateTime.Now
+                                                                         orderby s.ID descending
+                                                                         select new
+                                                                         {
+                                                                             s.Discount
+                                                                         }).Take(1).FirstOrDefault().Discount)
+                                                            }).ToList();
+                                var model = list.Take(sl);
+                                return list;
+                            }
                         }
-                        @foreach (var item in list)
+                        @foreach (var item in GetNewProduct(7))
                         {
                             var url = "/chi-tiet/" + item.MetaTitle + "-" + item.ID;
                             <div class="item item-carousel">

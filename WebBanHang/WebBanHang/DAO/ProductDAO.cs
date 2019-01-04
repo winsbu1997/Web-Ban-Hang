@@ -39,7 +39,7 @@ namespace WebBanHang.DAO
                     CreateDate = p.CreateDate,
                     Sale = ((from s in db.Sales
                              where s.ProductID == p.ID && s.EndDate >= DateTime.Now
-                             orderby s.ID descending
+                             orderby s.ID descending 
                              select new
                              {
                                  s.Discount
@@ -115,7 +115,7 @@ namespace WebBanHang.DAO
                              }).Take(1).FirstOrDefault().Discount)
 
                 }).ToList();
-            var model = products.Take(7);
+            var model = products.Take(12);
             return model;
         }
 

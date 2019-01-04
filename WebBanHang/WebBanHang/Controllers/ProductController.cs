@@ -15,7 +15,7 @@ namespace WebBanHang.Controllers
         // GET: Product
         public ActionResult Index()
         {
-            return View();
+            return View();   
         }
 
         [ChildActionOnly]
@@ -37,6 +37,7 @@ namespace WebBanHang.Controllers
         {
             ProductDAO db = new ProductDAO();
             var model = db.GetSaleProduct();
+            ViewBag.Count = model.ToList().Count;
             return PartialView(model);
         }
         [ChildActionOnly]

@@ -15,8 +15,10 @@ namespace WebBanHang.Controllers
         }
         public ActionResult ProductFilter(int? min,int? max)
         {
+           
             ViewBag.minprice = min;
             ViewBag.maxprice = max;
+
             return PartialView("ProductFilter");
         }
     }

@@ -255,3 +255,4 @@ D:\c#\Web mvc\WebBanHang\WebBanHang\bin\PagedList.dll
 D:\c#\Web mvc\WebBanHang\WebBanHang\bin\PagedList.Mvc.dll
 D:\c#\Web mvc\WebBanHang\WebBanHang\bin\PagedList.xml
 D:\c#\Web mvc\WebBanHang\WebBanHang\bin\PagedList.Mvc.xml
+D:\c#\Web mvc\WebBanHang\WebBanHang\obj\Debug\WebBanHang.csprojResolveAssemblyReference.cache
